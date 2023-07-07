@@ -1,6 +1,10 @@
 class AlbumsController < ApplicationController
 	before_action :check_artist
 
+	before_action do
+		ActiveStorage::Current.host = request.base_url
+	end
+
 	def create
 		begin
 			album = @current_user.albums.new(title: params[:title])
@@ -45,6 +49,40 @@ class AlbumsController < ApplicationController
 		else
 			render json: {error: "Can't find without id"}, status: :unprocessable_entity
 		end 
+	end
+
+	def index
+		albums = @current_user.albums
+		if albums || albums.length != 0
+			result = []
+			albums.each do |list|
+				h = Hash.new
+				h[:title] = list.title
+				result.push(h)
+			end
+			render json: {message: result}
+		else
+			render json: {error: "albums does not exist"}, status: 400
+		end
+	end
+
+	def show
+		albums = @current_user.albums.find_by_id(params[:id])
+		if albums
+			songs = albums.songs
+			result = []
+			songs.each do |song|
+				h = Hash.new
+				h[:title] = song.title
+				h[:genre] = song.genre
+				h[:artist] = song.artist.full_name
+				h[:url] = song.file.url
+				result.push(h)
+			end
+			render json: {message: result}
+		else
+			render json: {error: "albums does not exist"}
+		end
 	end
 
 

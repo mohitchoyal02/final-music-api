@@ -1,6 +1,6 @@
 class SongsController < ApplicationController
 	before_action :check_artist, only: [:create, :destroy, :top_song]
-	before_action :check_listner, only: [:show, :index, :search_song_by_title]
+	before_action :check_listner, only: [:show, :index, :search_song_by_title, :recently_played, :search_song_by_genre]
 	
 	before_action do
     	ActiveStorage::Current.host = request.base_url

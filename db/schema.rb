@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_07_06_125518) do
+ActiveRecord::Schema[7.0].define(version: 2023_07_07_072412) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -49,6 +49,23 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_06_125518) do
     t.index ["song_id"], name: "index_albums_on_song_id"
   end
 
+  create_table "playlists", force: :cascade do |t|
+    t.string "title"
+    t.integer "listner_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["listner_id"], name: "index_playlists_on_listner_id"
+  end
+
+  create_table "playlists_songs", id: false, force: :cascade do |t|
+    t.integer "playlist_id", null: false
+    t.integer "song_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["playlist_id", "song_id"], name: "index_playlists_songs_on_playlist_id_and_song_id"
+    t.index ["song_id", "playlist_id"], name: "index_playlists_songs_on_song_id_and_playlist_id"
+  end
+
   create_table "recents", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -67,8 +84,10 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_06_125518) do
     t.integer "play_count", default: 0
     t.integer "album_id"
     t.integer "artist_id"
+    t.integer "playlist_id"
     t.index ["album_id"], name: "index_songs_on_album_id"
     t.index ["artist_id"], name: "index_songs_on_artist_id"
+    t.index ["playlist_id"], name: "index_songs_on_playlist_id"
   end
 
   create_table "users", force: :cascade do |t|
