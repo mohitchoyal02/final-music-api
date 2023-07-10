@@ -1,10 +1,8 @@
 class SongsController < ApplicationController
-	before_action :check_artist, only: [:create, :destroy, :top_song]
+	before_action :check_artist, only: [:create, :destroy, :top_song, :update]
 	before_action :check_listner, only: [:show, :index, :search_song_by_title, :recently_played, :search_song_by_genre]
 	
-	before_action do
-    	ActiveStorage::Current.host = request.base_url
-  	end
+	
 
 	def create
 		# byebug
@@ -43,6 +41,23 @@ class SongsController < ApplicationController
 			end
 		rescue Exception => e
 			render json: {error: "An Error Occured", e: e.to_s}
+		end
+	end
+
+	def update
+		if params[:id]
+			song = @current_user.songs.find_by_id(params[:id])
+			if song
+				title = params[:title] ? params[:title] : song.title
+				genre = params[:genre] ? params[:genre] : song.genre
+				song.update(title: title, genre: genre)
+				render json: {message: "Song Updated"}, status: 200
+			else
+				render json: {error: "Song Not Found"}
+			end
+
+		else
+			render json: {error: "Song Not Found"}
 		end
 	end
 

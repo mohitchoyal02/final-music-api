@@ -1,27 +1,29 @@
 class AlbumsController < ApplicationController
 	before_action :check_artist
 
-	before_action do
-		ActiveStorage::Current.host = request.base_url
-	end
+	
 
 	def create
-		begin
-			album = @current_user.albums.new(title: params[:title])
-			album.song_ids= params[:songs]
-			if album.save
-				render json: {message: 'Albums successfully created'}
-			else
-				render json: {error: album.errors.full_messages}
+		if (params[:title] && !params[:title].blank?)&& (params[:songs] && params[:songs].length != 0)
+			begin
+				album = @current_user.albums.new(title: params[:title])
+				album.song_ids= params[:songs]
+				if album.save
+					render json: {message: 'Albums successfully created'}
+				else
+					render json: {error: album.errors.full_messages}
+				end
+			rescue Exception => err
+				render json: {error: err.to_s}
 			end
-		rescue Exception => err
-			render json: {error: err.to_s}
+		else
+			render json: {error: "Fields cannot be empty or blank"}
 		end
 	end
 
 	def update
 		if params[:id]
-			album = Album.find_by_id(params[:id])
+			album = @current_user.albums.find_by_id(params[:id])
 			if album
 				title = params[:title] ? params[:title] : album.title
 				songs = params[:songs] ? params[:songs] : album.songs
@@ -39,7 +41,7 @@ class AlbumsController < ApplicationController
 
 	def destroy
 		if params[:id]
-			album = Album.find_by_id(params[:id])
+			album = @current_user.albums.find_by_id(params[:id])
 			if album
 				album.destroy
 				render json: {message: 'Album deleted successfully'}

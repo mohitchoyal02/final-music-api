@@ -1,9 +1,7 @@
 class PlaylistsController < ApplicationController
 
 	before_action :check_listner
-	before_action do
-    	ActiveStorage::Current.host = request.base_url
-  	end
+	
 
 	def create
 		if params[:title] && params[:songs]
