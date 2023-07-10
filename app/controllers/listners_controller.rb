@@ -53,18 +53,18 @@ class ListnersController < ApplicationController
 
 	end
 
-	def destroy
-		if params[:id]
-			artist = Listner.find_by_id(params[:id])
-			if artist
-				artist.delete
+	def destroy_listner
+		# if params[:id]
+			# artist = @current_user.find_by_id(params[:id])
+			# if artist
+				@current_user.delete
 				render json: {message: "Listner Deleted"}, status: 202
-			else
-				render json:{error: "can't find listner with given id"}
-			end
-		else
-			render json: {error: "can't find"}, status: :unprocessable_entity
-		end
+			# else
+			# 	render json:{error: "can't find listner with given id"}
+			# end
+		# else
+			# render json: {error: "can't find"}, status: :unprocessable_entity
+		# end
 	end
 
 

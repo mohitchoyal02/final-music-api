@@ -5,6 +5,7 @@ Rails.application.routes.draw do
     resources :albums
     resources :playlists
     delete "artist/delete", to:"artists#destroy_artist"
+    delete "listner/delete", to: "listners#destroy_listner"
     put "artists/update/:id", to: "artists#update_artist"
     put "listners/update/:id", to: "listners#update_listner"
     post "artists/login", to: "artists#login"

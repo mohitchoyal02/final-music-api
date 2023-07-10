@@ -69,16 +69,7 @@ class PlaylistsController < ApplicationController
 		playlist = @current_user.playlists.find_by_id(params[:id])
 		if playlist
 			songs = playlist.songs
-			result = []
-			songs.each do |song|
-				h = Hash.new
-				h[:title] = song.title
-				h[:genre] = song.genre
-				h[:artist] = song.artist.full_name
-				h[:url] = song.file.url
-				result.push(h)
-			end
-			render json: {message: result}
+			render json: songs
 		else
 			render json: {error: "playlists does not exist"}
 		end

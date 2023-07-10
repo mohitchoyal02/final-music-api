@@ -67,16 +67,7 @@ class SongsController < ApplicationController
 			if songs.length == 0
 				render json: {message: "Songs not found"}
 			else
-				result = []
-				songs.each do |song|
-					h = Hash.new
-					h[:title] = song.title
-					h[:artist] = song.artist.full_name
-					h[:genre] = song.title
-					h[:url] = song.file.url
-					result.push(h)
-				end
-				render json: result
+				render json: songs
 			end
 		else
 			render json: {error: "Please Search Somthing"}
@@ -89,16 +80,7 @@ class SongsController < ApplicationController
 			if songs.length == 0
 				render json: {message: "Songs not found"}
 			else
-				result = []
-				songs.each do |song|
-					h = Hash.new
-					h[:title] = song.title
-					h[:artist] = song.artist.full_name
-					h[:genre] = song.title
-					h[:url] = song.file.url
-					result.push(h)
-				end
-				render json: result
+				render json: songs
 			end
 		else
 			render json: {error: "Please Search Somthing"}
@@ -110,16 +92,7 @@ class SongsController < ApplicationController
 		if songs.length == 0
 			render json: {message: "Songs not found"}
 		else
-			result = []
-			songs.each do |song|
-				h = Hash.new
-				h[:title] = song.title
-				h[:artist] = song.artist.full_name
-				h[:genre] = song.title
-				h[:url] = song.file.url
-				result.push(h)
-			end
-			render json: result
+			render json: songs
 		end
 	end
 
@@ -140,17 +113,7 @@ class SongsController < ApplicationController
 	def recently_played
 		list = @current_user.recents
 		if list && list.length != 0
-			result = []
-			list.each do |l|
-				# byebug
-				h = Hash.new
-				h[:title] = l.song.title
-				h[:artist] = l.song.artist.full_name
-				h[:genre] = l.song.genre
-				h[:url] = l.song.file.url
-				result.push(h)
-			end
-			render json: {songs: result}
+			render json: list
 		else
 			render json: {message: "There is no recently played song"}
 		end
@@ -158,17 +121,7 @@ class SongsController < ApplicationController
 
 	def top_song
 		songs = @current_user.songs.order(play_count: :desc).limit(3)
-		result = []
-		songs.each do |song|
-			h = Hash.new
-			h[:title] = song.title
-			h[:genre] = song.genre
-			h[:artist] = song.artist.full_name
-			h[:count] = song.play_count
-			h[:url] = song.file.url
-			result.push(h)
-		end
-		render json: {songs: result}
+		render json: songs
 	end
 
 
