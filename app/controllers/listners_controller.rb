@@ -3,11 +3,17 @@ class ListnersController < ApplicationController
 	before_action :check_listner, only: [:update, :destroy, :update_listner, :recently_played]
 
 	def create
-		listner = Listner.new(listner_params)
-		if listner.save
-			render json: listner
+		if (params[:username] || !params[:username].blank?) && (params[:password] || !params[:password].blank?) && (params[:email] || !params[:email].blank?) && (params[:full_name] || !params[:full_name].blank?)&&(params[:genre_type] || !params[:genre_type].blank?)
+
+			listner = Listner.new(listner_params)
+			if listner.save
+				render json: listner
+			else
+				render json: {error: listner.errors.full_messages}
+			end
 		else
-			render json: {error: listner.errors.full_messages}
+			render json: { error: "Fields can't be empty "}
+			
 		end
 	end
 
@@ -57,8 +63,8 @@ class ListnersController < ApplicationController
 		# if params[:id]
 			# artist = @current_user.find_by_id(params[:id])
 			# if artist
-				@current_user.delete
-				render json: {message: "Listner Deleted"}, status: 202
+			@current_user.delete
+			render json: {message: "Listner Deleted"}, status: 202
 			# else
 			# 	render json:{error: "can't find listner with given id"}
 			# end

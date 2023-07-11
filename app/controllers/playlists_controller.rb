@@ -53,13 +53,7 @@ class PlaylistsController < ApplicationController
 	def index
 		playlists = @current_user.playlists
 		if playlists || playlists.length != 0
-			result = []
-			playlists.each do |list|
-				h = Hash.new
-				h[:title] = list.title
-				result.push(h)
-			end
-			render json: {message: result}
+			render json: playlists
 		else
 			render json: {error: "playlists does not exist"}, status: 400
 		end
@@ -68,8 +62,8 @@ class PlaylistsController < ApplicationController
 	def show
 		playlist = @current_user.playlists.find_by_id(params[:id])
 		if playlist
-			songs = playlist.songs
-			render json: songs
+			# songs = playlist.songs
+			render json: playlist
 		else
 			render json: {error: "playlists does not exist"}
 		end

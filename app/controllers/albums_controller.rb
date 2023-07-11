@@ -56,32 +56,32 @@ class AlbumsController < ApplicationController
 	def index
 		albums = @current_user.albums
 		if albums || albums.length != 0
-			result = []
-			albums.each do |list|
-				h = Hash.new
-				h[:title] = list.title
-				result.push(h)
-			end
-			render json: {message: result}
+			# result = []
+			# albums.each do |list|
+			# 	h = Hash.new
+			# 	h[:title] = list.title
+			# 	result.push(h)
+			# end
+			render json: albums
 		else
 			render json: {error: "albums does not exist"}, status: 400
 		end
 	end
 
 	def show
-		albums = @current_user.albums.find_by_id(params[:id])
-		if albums
-			songs = albums.songs
-			result = []
-			songs.each do |song|
-				h = Hash.new
-				h[:title] = song.title
-				h[:genre] = song.genre
-				h[:artist] = song.artist.full_name
-				h[:url] = song.file.url
-				result.push(h)
-			end
-			render json: {message: result}
+		album = @current_user.albums.find_by_id(params[:id])
+		if album
+			# songs = albums.songs
+			# result = []
+			# songs.each do |song|
+			# 	h = Hash.new
+			# 	h[:title] = song.title
+			# 	h[:genre] = song.genre
+			# 	h[:artist] = song.artist.full_name
+			# 	h[:url] = song.file.url
+			# 	result.push(h)
+			# end
+			render json: album
 		else
 			render json: {error: "albums does not exist"}
 		end

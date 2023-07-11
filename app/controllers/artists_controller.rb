@@ -3,6 +3,7 @@ class ArtistsController < ApplicationController
 	before_action :check_artist, only: [:update, :destroy_artist, :update_artist]
 
 	def create
+		if (params[:username] || !params[:username].blank?) && (params[:password] || !params[:password].blank?) && (params[:email] || !params[:email].blank?) && (params[:full_name] || !params[:full_name].blank?)&&(params[:genre_type] || !params[:genre_type].blank?)
 		artist = Artist.new(artist_params)
 		if params[:password] && params[:password].length > 4 && params[:password].length < 10
 			artist.password = params[:password]
@@ -15,6 +16,9 @@ class ArtistsController < ApplicationController
 		else
 			render json: { error: "password must be in range 4-10"}
 		end
+	else
+		render json: { error: "Fields can't be empty "}
+	end
 	end
 
 	def login
