@@ -1,9 +1,12 @@
 Rails.application.routes.draw do
+  devise_for :admin_users, ActiveAdmin::Devise.config
+  ActiveAdmin.routes(self)
     resources :artists
     resources :listners
     resources :songs
     resources :albums
     resources :playlists
+    patch "artist/update-password", to: "artists#update_password"
     delete "artist/delete", to:"artists#destroy_artist"
     delete "listner/delete", to: "listners#destroy_listner"
     put "artists/update/:id", to: "artists#update_artist"
