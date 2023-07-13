@@ -41,8 +41,8 @@ class AlbumsController < ApiController
   end
 
   def index
-    albums = @current_user.albums
-    if albums || !albums.length.empty?
+    albums = params[:title].blank? ? @current_user.albums : @current_user.albums.where("title LIKE ?", "%#{params[:title]}%")
+    if albums || !albums.empty?
       render json: albums
     else
       render json: { error: 'albums does not exist' }, status: 400

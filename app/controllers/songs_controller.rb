@@ -1,6 +1,6 @@
 class SongsController < ApiController
-  before_action :check_artist, only: %i(create destroy top_song update)
-  before_action :check_listner, only: %i(show index search_song_by_title recently_played search_song_by_genre)
+  before_action :check_artist, only: [:create, :destroy, :top_song, :update]
+  before_action :check_listner, only: [:show, :index, :search_song_by_title, :recently_played, :search_song_by_genre]
   
   
 
@@ -61,19 +61,6 @@ class SongsController < ApiController
     end
   end
 
-  def search_song_by_title
-    if params[:title] && params[:title].length != 0
-      songs = Song.where("title Like ?" ,"%#{params[:title]}%")
-      if songs.length == 0
-        render json: { message: "Songs not found" }
-      else
-        render json: songs
-      end
-    else
-      render json: { error: "Please Search Somthing" }
-    end
-  end
-
   def search_song_by_genre
     if params[:genre] && params[:genre].length != 0
       songs = Song.where("genre Like ?" ,"%#{params[:genre]}%")
@@ -88,7 +75,7 @@ class SongsController < ApiController
   end
 
   def index
-    songs = Song.all
+    songs = params[:title].blank? ? Song.all : Song.where("title LIKE ?" ,"%#{params[:title]}%")
     if songs.length == 0
       render json: { message: "Songs not found" }
     else

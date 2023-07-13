@@ -51,8 +51,8 @@ class PlaylistsController < ApiController
   end
 
   def index
-    playlists = @current_user.playlists
-    if playlists || playlists.length != 0
+    playlists = params[:title].blank? ? @current_user.playlists : @current_user.playlists.where("title LIKE ?", "%#{params[:title]}%")
+    if !playlists.empty?
       render json: playlists
     else
       render json: { error: "playlists does not exist" }, status: 400
