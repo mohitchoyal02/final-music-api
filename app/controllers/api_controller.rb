@@ -20,6 +20,17 @@ class ApiController < ActionController::API
   end
 
   def is_valid(param)
-    return (param && !param.strip.blank?)
+    return (param && !param.blank?)
+  end
+  def check_artist
+    if @current_user.type != 'Artist'
+      render json: { error: 'Listners are Not Allowed for this request' }, status: 400
+    end
+  end
+
+  def check_listner
+    if @current_user.type != 'Listner'
+      render json: { error: 'Artist are Not Allowed for this request' }, status: 400
+    end
   end
 end

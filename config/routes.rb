@@ -1,19 +1,16 @@
 Rails.application.routes.draw do
   devise_for :admin_users, ActiveAdmin::Devise.config
   ActiveAdmin.routes(self)
-    resources :artists
-    resources :listners
+    resources :users
     resources :songs
     resources :albums
     resources :playlists
-    patch "artist/update-password", to: "artists#update_password"
-    delete "artist/delete", to:"artists#destroy_artist"
-    delete "listner/delete", to: "listners#destroy_listner"
-    put "artists/update/:id", to: "artists#update_artist"
-    put "listners/update/:id", to: "listners#update_listner"
-    post "artists/login", to: "artists#login"
-    post "listners/login", to: "listners#login"
-    get "listner/search", to: "songs#search_song_by_title"
+    
+    patch "user/update-password", to: "users#update_password"
+    delete "user/delete", to:"users#destroy_user"
+    put "user/update", to: "users#update_user"
+    post "user/login", to: "users#login"
+    # get "listner/search", to: "songs#search_song_by_title"
     get "listner/genre-search", to: "songs#search_song_by_genre"
     get "song/recently-played", to: "songs#recently_played"
     get "artist/top-3", to: "songs#top_song"

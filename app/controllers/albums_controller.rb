@@ -4,15 +4,16 @@ class AlbumsController < ApiController
 
   def create
     if is_valid(params[:title]) && (params[:songs] && !params[:songs].empty?)
+      songs = @current_user.songs.where(id: params[:songs])
       album = @current_user.albums.new(title: params[:title])
-      album.song_ids = params[:songs]
+      album.songs = songs
       if album.save
         render json: { message: 'Albums successfully created' }
       else
-        render json: { error: album.errors.full_messages }
+        render json: { error: album.errors.full_messages }, status: :unprocessable_entity
       end
     else
-      render json: { error: 'Fields cannot be empty or blank' }
+      render json: { error: 'Fields cannot be empty or blank' }, status: :unprocessable_entity
     end
   end
 
@@ -24,7 +25,7 @@ class AlbumsController < ApiController
 
       album.update(title: title, songs: songs)
 
-      render json: { message: 'Album updated successfully' }
+      render json: { message: 'Album updated successfully' }, status: 200
     else
       render json: { message: "can't find any album" }, status: 400
     end
@@ -34,16 +35,19 @@ class AlbumsController < ApiController
     album = @current_user.albums.find_by_id(params[:id])
     if album
       album.destroy
-      render json: { message: 'Album deleted successfully' }
+      render json: { message: 'Album deleted successfully' }, status: 200
     else
       render json: { message: "can't find any album" }, status: 400
     end
   end
 
   def index
+    if params[:title]
+      params[:title] = params[:title].strip
+    end
     albums = params[:title].blank? ? @current_user.albums : @current_user.albums.where("title LIKE ?", "%#{params[:title]}%")
     if albums || !albums.empty?
-      render json: albums
+      render json: albums, status: 200
     else
       render json: { error: 'albums does not exist' }, status: 400
     end
@@ -54,7 +58,7 @@ class AlbumsController < ApiController
     if album
       render json: album
     else
-      render json: { error: 'albums does not exist' }
+      render json: { error: 'albums does not exist' }, status: 400
     end
   end
 

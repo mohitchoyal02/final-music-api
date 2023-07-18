@@ -2,16 +2,17 @@ class PlaylistSerializer < ActiveModel::Serializer
   attributes :id, :title, :songs
 
   has_many :songs
-  class SongSerializer < ActiveModel::Serializer
-  attributes :id, :title, :genre, :artist_name, :url
 
-  def url
-    url = object.file.url
-  end
+  # def songs
+  #   object.songs
+  # end
 
-  def artist_name
-    artist_name = object.artist.full_name
-  end
-end
+
+  # attribute :songs do |params|
+  #   SongSerializer.new(params.songs)
+  # end  
+  # def songs
+  #   ActiveModel::SerializableResource.new(object.songs,  each_serializer: SongSerializer)
+  # end
 
 end
