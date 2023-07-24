@@ -6,8 +6,9 @@ class UsersController < ApiController
     user = User.new(user_params)
     if params[:password] && params[:password].length > 4 && params[:password].length < 10
       user.password = params[:password]
+      # byebug
       if user.save
-        render json: user, status: :created
+        render json: { data: UserSerializer.new(user), success: true }, status: 201
       else
         render json: user.errors, status: :unprocessable_entity
       end
@@ -24,7 +25,7 @@ class UsersController < ApiController
       user = User.find_by(username: params[:username])
       if user && user.password == params[:password]
         token = jwt_encode({user_id: user.id})
-        render json: {token: token}, status: 200
+        render json: {token: token, success: true}, status: 200
       else
         render json: { error: "Invalid credentials" }, status: :unauthorized
       end
@@ -41,7 +42,7 @@ class UsersController < ApiController
 
     begin
       @current_user.update(username: username, full_name: full_name, email: email, genre_type: genre_type)
-      render json: { message: "User Updated" }
+      render json: { message: "User Updated", data: UserSerializer.new(@current_user) }
     rescue Exception => e
       render json: { error: e.to_s }, status: 400
     end
@@ -61,6 +62,16 @@ class UsersController < ApiController
       end
     else
       render json: { error: "Provide all fields" }, status: :unprocessable_entity
+    end
+  end
+
+  # For Testing Purpose only
+  def index
+    users = User.all
+    if users.empty?
+      render json: { message: "No user Found"}, status: 400
+    else
+      render json: users, status: 200
     end
   end
 
